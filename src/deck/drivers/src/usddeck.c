@@ -684,9 +684,9 @@ static void usdLogTask(void* prm)
       eventtriggerRegisterCallback(eventtriggerHandler_USD, &usddeckEventtriggerCallback);
 
       DEBUG_PRINT("Config read [OK].\n");
-      // DEBUG_PRINT("Frequency: %d Hz. Buffer size: %d\n",
-      //             usdLogConfig.frequency, usdLogConfig.bufferSize);
-      // DEBUG_PRINT("enOnStartup: %d. mode: %d\n", usdLogConfig.enableOnStartup, usdLogConfig.mode);
+      DEBUG_PRINT("Frequency: %d Hz. Buffer size: %d\n",
+                  usdLogConfig.frequency, usdLogConfig.bufferSize);
+      DEBUG_PRINT("enOnStartup: %d. mode: %d\n", usdLogConfig.enableOnStartup, usdLogConfig.mode);
       // DEBUG_PRINT("slots: %d, %d\n", usdLogConfig.numSlots, usdLogConfig.numBytes);
       initSuccess = true;
       break;

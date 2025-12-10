@@ -74,7 +74,7 @@
 #include "autoconf.h"
 #include "vcp_esc_passthrough.h"
 // #include "relative_localization.h"
-#include "switch.h"
+#include "controller_switch.h"
 
 #if CONFIG_ENABLE_CPX
   #include "cpxlink.h"

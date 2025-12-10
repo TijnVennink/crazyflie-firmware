@@ -165,7 +165,7 @@
 #define FLAPPERDECK_TASK_NAME     "FLAPPERDECK"
 // #define RELATIVE_LOC_TASK_NAME    "REL-LOC"
 #define TEENSY_TASK_NAME          "TEENSY"
-#define SWITCH_TASK_NAME          "SWITCH"
+#define SWITCH_TASK_NAME          "CONTROLLER_SWITCH"
 
 //Task stack sizes
 #define SYSTEM_TASK_STACKSIZE           (2* configMINIMAL_STACK_SIZE)

@@ -1,4 +1,4 @@
-#include "switch.h"
+#include "controller_switch.h"
 #define DEBUG_MODULE "AUX_SWITCH"
 #include "debug.h"
 
@@ -8,9 +8,12 @@
 #include "task.h"
 
 #include "log.h"
+#include "param.h"
 #include "system.h"
 
 #include "supervisor.h"
+
+#include "commander.h"
 
 
 bool isInit = false;
@@ -18,7 +21,9 @@ bool isInit = false;
 logVarId_t idAux0, idAux1, idAux2, idAux3;
 uint16_t aux_0, aux_1, aux_2, aux_3;
 
-
+// Param variables
+paramVarId_t idCanLog;
+paramVarId_t idLogEnabled;
 void switchInit(void)
 {
   if (isInit)
@@ -30,14 +35,16 @@ void switchInit(void)
   idAux3 = logGetVarId("cppm", "aux3");
 
   xTaskCreate(auxSwitchTask, SWITCH_TASK_NAME, SWITCH_TASK_STACKSIZE, NULL, SWITCH_TASK_PRI, NULL);
+
+  idCanLog = paramGetVarId("usd", "canLog");
+  idLogEnabled = paramGetVarId("usd", "logging");
+
   isInit = true;
   DEBUG_PRINT("AUX switch task created\n");
 }
-
 void auxSwitchTask(void *arg)
 {
   systemWaitStart();
-
   static uint32_t tick;
   while (1)
   {
@@ -53,19 +60,35 @@ void auxSwitchTask(void *arg)
 
       if (auxConnected())
       {
-      //   check if we need to arm/disarm
-        if (auxState(3))
+        if (!auxState(2))
         {
-          if (!supervisorIsArmed())
+          // If logging is not enabled, enable it
+          if (paramGetUint(idCanLog) && !paramGetUint(idLogEnabled))
           {
-            supervisorRequestArming(true);
-            DEBUG_PRINT("Arming with AUX3\n");
+            paramSetInt(idLogEnabled, 1);
+            DEBUG_PRINT("Enabling logging with AUX2\n");
+          }
+          else if (!paramGetUint(idCanLog))
+          {
+            // Cannot log, probally something with sd not being initialized or inserted
+          } 
+          else
+          {
+            // Logging is already enabled
           }
         }
-        else if (supervisorIsArmed())
+        else if (auxState(2))
         {
-          supervisorRequestArming(false);
-          DEBUG_PRINT("Disarming with AUX3\n");
+          if (paramGetUint(idLogEnabled))
+          {
+            // If logging is enabled, disable it
+            paramSetInt(idLogEnabled, 0);
+            DEBUG_PRINT("Disabling logging with AUX2\n"); 
+          }
+          else
+          {
+            // Logging is already disabled
+          }
         }
       }
     }
