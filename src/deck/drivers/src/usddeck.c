@@ -1107,6 +1107,11 @@ PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, canLog, &initSuccess)
  * @brief Controls if logging to the SD-card is active. Set to 1 to start logging, set to 0 to stop logging (default).
  */
 PARAM_ADD_CORE(PARAM_UINT8, logging, &enableLogging) /* use to start/stop logging*/
+
+/**
+ * @brief Current log filename (read-only)
+ */
+PARAM_ADD_CORE(PARAM_UINT8, logname, usdLogConfig.filename)
 PARAM_GROUP_STOP(usd)
 
 /**
