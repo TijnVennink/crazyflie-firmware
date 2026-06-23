@@ -75,6 +75,8 @@
 #include "vcp_esc_passthrough.h"
 // #include "relative_localization.h"
 #include "controller_switch.h"
+#include "ext_pos_uart.h"
+#include "ext_pos_uart.h"
 
 #if CONFIG_ENABLE_CPX
   #include "cpxlink.h"
@@ -190,6 +192,7 @@ void systemTask(void *arg)
   systemInit();
   commInit();
   commanderInit();
+  extPosUartInit();
 
   StateEstimatorType estimator = StateEstimatorTypeAutoSelect;
 
