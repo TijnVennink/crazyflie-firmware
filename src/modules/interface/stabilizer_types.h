@@ -126,6 +126,7 @@ typedef struct positionMeasurement_s {
     float pos[3];
   };
   float stdDev;
+  float stdDevZ;  // optional per-axis z noise; 0 -> fall back to stdDev
   measurementSource_t source;
 } positionMeasurement_t;
 

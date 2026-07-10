@@ -52,6 +52,7 @@
 #include "comm.h"
 #include "stabilizer.h"
 #include "commander.h"
+#include "ext_pos_uart.h"
 #include "console.h"
 #include "usblink.h"
 #include "mem.h"
@@ -189,6 +190,7 @@ void systemTask(void *arg)
   systemInit();
   commInit();
   commanderInit();
+  extPosUartInit();
 
   StateEstimatorType estimator = StateEstimatorTypeAutoSelect;
 

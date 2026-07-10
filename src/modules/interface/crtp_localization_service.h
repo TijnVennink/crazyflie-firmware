@@ -68,6 +68,7 @@ typedef enum
   LH_ANGLE_STREAM          = 10,
   LH_PERSIST_DATA          = 11,
   LH_MATCHED_ANGLE_STREAM    = 12,
+  EXT_HEIGHT                 = 13,
 } locsrv_t;
 
 // Set up the callback for the CRTP_PORT_LOCALIZATION

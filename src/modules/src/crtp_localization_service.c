@@ -157,6 +157,7 @@ static void locSrvCrtpCB(CRTPPacket* pk);
 static void extPositionHandler(CRTPPacket* pk);
 static void genericLocHandle(CRTPPacket* pk);
 static void extPositionPackedHandler(CRTPPacket* pk);
+static void extHeightHandler(CRTPPacket* pk);
 
 
 void locSrvInit()
@@ -210,6 +211,19 @@ static void extPositionHandler(CRTPPacket* pk) {
   updateLogFromExtPos();
 
   estimatorEnqueuePosition(&ext_pos);
+  tickOfLastPacket = xTaskGetTickCount();
+}
+
+// z-only absolute-height measurement from an external source (e.g. OptiTrack):
+static void extHeightHandler(CRTPPacket* pk) {
+  if (pk->size < 1 + 2 * sizeof(float)) {
+    return;
+  }
+  heightMeasurement_t height;
+  height.timestamp = xTaskGetTickCount();
+  memcpy(&height.height, &pk->data[1], sizeof(float));
+  memcpy(&height.stdDev, &pk->data[1 + sizeof(float)], sizeof(float));
+  estimatorEnqueueAbsoluteHeight(&height);
   tickOfLastPacket = xTaskGetTickCount();
 }
 
@@ -340,6 +354,9 @@ static void genericLocHandle(CRTPPacket* pk)
       break;
     case LH_PERSIST_DATA:
       lhPersistDataHandler(pk);
+      break;
+    case EXT_HEIGHT:
+      extHeightHandler(pk);
       break;
     default:
       // Nothing here

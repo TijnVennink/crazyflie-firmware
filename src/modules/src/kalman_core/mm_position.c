@@ -33,6 +33,8 @@ void kalmanCoreUpdateWithPosition(kalmanCoreData_t* this, positionMeasurement_t 
     float h[KC_STATE_DIM] = {0};
     arm_matrix_instance_f32 H = {1, KC_STATE_DIM, h};
     h[KC_STATE_X+i] = 1;
-    kalmanCoreScalarUpdate(this, &H, xyz->pos[i] - this->S[KC_STATE_X+i], xyz->stdDev);
+    // z can use its own noise (VIO z is weakly observable); 0 -> use stdDev
+    float std = (i == 2 && xyz->stdDevZ > 0.0f) ? xyz->stdDevZ : xyz->stdDev;
+    kalmanCoreScalarUpdate(this, &H, xyz->pos[i] - this->S[KC_STATE_X+i], std);
   }
 }
